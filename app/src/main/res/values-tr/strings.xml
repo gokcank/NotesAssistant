@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Notlar - NotesAssistant</string>
+    <string name="notes_title">Notlarım</string>
+    <string name="reminders_title">Hatırlatıcılar</string>
+    <string name="new_note">Yeni not</string>
+    <string name="new_checklist">Yeni liste</string>
+    <string name="note_title_hint">Başlık</string>
+    <string name="note_body_hint">Notunuzu yazın…</string>
+    <string name="checklist_item_hint">Madde ekle</string>
+    <string name="save">Kaydet</string>
+    <string name="delete">Sil</string>
+    <string name="set_reminder">Hatırlatıcı kur</string>
+    <string name="add_to_calendar">Takvime ekle</string>
+    <string name="reminder_suggestion">Algılanan tarih: %1$s</string>
+    <string name="empty_notes">Henüz not yok. Başlamak için + simgesine dokunun.</string>
+    <string name="empty_reminders">Kurulu hatırlatıcı yok.</string>
+    <string name="reminder_channel_name">Hatırlatıcılar</string>
+    <string name="reminder_channel_desc">Not ve liste hatırlatıcı bildirimleri</string>
+    <string name="cancel">İptal</string>
+    <string name="ok">Tamam</string>
+    <string name="untitled">(Başlıksız)</string>
+    <string name="past_suffix">(geçti)</string>
+
+    <!-- Ayarlar -->
+    <string name="settings_title">Ayarlar</string>
+    <string name="settings_appearance_section">Görünüm</string>
+    <string name="settings_theme_title">Tema</string>
+    <string name="theme_system">Sistem varsayılanı</string>
+    <string name="theme_light">Açık</string>
+    <string name="theme_dark">Koyu</string>
+    <string name="settings_language_title">Dil</string>
+    <string name="language_system">Sistem varsayılanı</string>
+    <string name="settings_backup_section">Yedekleme</string>
+    <string name="settings_auto_backup_info">Notlarınız Google hesabınıza otomatik olarak yedeklenir; uygulamayı yeniden kurduğunuzda geri gelir.</string>
+    <string name="settings_export_title">Dışa aktar</string>
+    <string name="settings_export_desc">Notlarınızı bir yedek dosyasına kaydedin</string>
+    <string name="settings_import_title">Geri yükle</string>
+    <string name="settings_import_desc">Notlarınızı yedek dosyasından geri getirin</string>
+    <string name="settings_notes_section">Notlar</string>
+    <string name="settings_import_doc_title">Belgeden içe aktar</string>
+    <string name="settings_import_doc_desc">Bir belgeyi yeni bir nota dönüştürün</string>
+    <string name="settings_notifications_section">Bildirimler</string>
+    <string name="settings_notification_title">Bildirim ayarları</string>
+    <string name="settings_notification_desc">Hatırlatıcı bildirimlerini yönetin</string>
+    <string name="settings_exact_alarm_title">Tam zamanında hatırlatma</string>
+    <string name="settings_exact_alarm_desc">Hatırlatıcıların dakikası dakikasına çalması için alarma izin verin</string>
+    <string name="settings_about_section">Hakkında</string>
+    <string name="settings_developer_title">Geliştirici</string>
+    <string name="settings_bug_report">Hata Bildir</string>
+    <string name="bug_report_subject">HATA BİLDİR</string>
+
+    <!-- Mesajlar -->
+    <string name="msg_reminder_set">Hatırlatıcı kuruldu</string>
+    <string name="msg_export_done">Yedek kaydedildi</string>
+    <string name="msg_export_failed">Dışa aktarma başarısız: %1$s</string>
+    <string name="msg_import_done">%1$d not geri yüklendi</string>
+    <string name="msg_import_failed">Geri yükleme başarısız: %1$s</string>
+    <string name="msg_doc_imported">Belge nota dönüştürüldü</string>
+    <string name="msg_doc_import_failed">Belge içe aktarılamadı: %1$s</string>
+    <string name="error_file_write">Dosya yazılamadı</string>
+    <string name="error_file_read">Dosya okunamadı</string>
+    <string name="imported_doc_title">İçe aktarılan belge</string>
+
+    <!-- İlk açılış -->
+    <string name="onboarding_title">Hatırlatıcıları kaçırmayın</string>
+    <string name="onboarding_message">NotesAssistant, notlarınızı ve listelerinizi seçtiğiniz saatte size bildirimle hatırlatır. Hatırlatıcıların size ulaşabilmesi için bildirimlere izin verin.</string>
+    <string name="onboarding_allow">İzin ver</string>
+    <string name="onboarding_later">Şimdi değil</string>
+    <string name="reminders_permission_warning">Bildirimler kapalı — hatırlatıcılar çalamaz. Düzeltmek için dokunun.</string>
+
+    <!-- Silme onayı -->
+    <string name="delete_note_title">Not silinsin mi?</string>
+    <string name="delete_note_message">Not ve hatırlatıcıları kaldırılacak.</string>
+
+    <!-- Arama, sabitleme, renkler, görünüm -->
+    <string name="search">Ara</string>
+    <string name="search_hint">Notlarda ara…</string>
+    <string name="no_results">Eşleşen not yok</string>
+    <string name="undo">Geri Al</string>
+    <string name="msg_note_deleted">Not silindi</string>
+    <string name="pin_note">Sabitle</string>
+    <string name="unpin_note">Sabitlemeyi kaldır</string>
+    <string name="note_color">Not rengi</string>
+    <string name="view_grid">Izgara görünümü</string>
+    <string name="view_list">Liste görünümü</string>
+</resources>

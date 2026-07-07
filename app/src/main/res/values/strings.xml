@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">NotesAssistant</string>
+    <string name="notes_title">My Notes</string>
+    <string name="reminders_title">Reminders</string>
+    <string name="new_note">New note</string>
+    <string name="new_checklist">New list</string>
+    <string name="note_title_hint">Title</string>
+    <string name="note_body_hint">Write your note…</string>
+    <string name="checklist_item_hint">Add item</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="set_reminder">Set reminder</string>
+    <string name="add_to_calendar">Add to calendar</string>
+    <string name="reminder_suggestion">Detected date: %1$s</string>
+    <string name="empty_notes">No notes yet. Tap + to get started.</string>
+    <string name="empty_reminders">No reminders set.</string>
+    <string name="reminder_channel_name">Reminders</string>
+    <string name="reminder_channel_desc">Note and list reminder notifications</string>
+    <string name="cancel">Cancel</string>
+    <string name="ok">OK</string>
+    <string name="untitled">(Untitled)</string>
+    <string name="past_suffix">(past)</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_appearance_section">Appearance</string>
+    <string name="settings_theme_title">Theme</string>
+    <string name="theme_system">System default</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="settings_language_title">Language</string>
+    <string name="language_system">System default</string>
+    <string name="language_english" translatable="false">English</string>
+    <string name="language_turkish" translatable="false">Türkçe</string>
+    <string name="settings_backup_section">Backup</string>
+    <string name="settings_auto_backup_info">Your notes are backed up to your Google account automatically and come back when you reinstall the app.</string>
+    <string name="settings_export_title">Export</string>
+    <string name="settings_export_desc">Save your notes to a backup file</string>
+    <string name="settings_import_title">Restore</string>
+    <string name="settings_import_desc">Bring your notes back from a backup file</string>
+    <string name="settings_notes_section">Notes</string>
+    <string name="settings_import_doc_title">Import from document</string>
+    <string name="settings_import_doc_desc">Turn a document into a new note</string>
+    <string name="settings_notifications_section">Notifications</string>
+    <string name="settings_notification_title">Notification settings</string>
+    <string name="settings_notification_desc">Manage reminder notifications</string>
+    <string name="settings_exact_alarm_title">On-time reminders</string>
+    <string name="settings_exact_alarm_desc">Allow alarms so reminders ring exactly on time</string>
+    <string name="settings_about_section">About</string>
+    <string name="settings_version_desc" translatable="false">v1.0.0</string>
+    <string name="settings_developer_title">Developer</string>
+    <string name="settings_developer_name" translatable="false">gokcank</string>
+    <string name="settings_bug_report">Bug Report</string>
+    <string name="bug_report_subject">BUG REPORT</string>
+    <string name="support_email" translatable="false">destek.gokcank@gmail.com</string>
+
+    <!-- Messages -->
+    <string name="msg_reminder_set">Reminder set</string>
+    <string name="msg_export_done">Backup saved</string>
+    <string name="msg_export_failed">Export failed: %1$s</string>
+    <string name="msg_import_done">%1$d notes restored</string>
+    <string name="msg_import_failed">Restore failed: %1$s</string>
+    <string name="msg_doc_imported">Document converted to a note</string>
+    <string name="msg_doc_import_failed">Couldn\'t import the document: %1$s</string>
+    <string name="error_file_write">Couldn\'t write the file</string>
+    <string name="error_file_read">Couldn\'t read the file</string>
+    <string name="imported_doc_title">Imported document</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_title">Never miss a reminder</string>
+    <string name="onboarding_message">NotesAssistant uses notifications to remind you about your notes and lists at the time you choose. Allow notifications so your reminders can reach you.</string>
+    <string name="onboarding_allow">Allow</string>
+    <string name="onboarding_later">Not now</string>
+    <string name="reminders_permission_warning">Notifications are off — reminders can\'t ring. Tap to fix.</string>
+
+    <!-- Delete confirmation -->
+    <string name="delete_note_title">Delete this note?</string>
+    <string name="delete_note_message">The note and its reminders will be removed.</string>
+
+    <!-- Search, pin, colors, view -->
+    <string name="search">Search</string>
+    <string name="search_hint">Search notes…</string>
+    <string name="no_results">No matching notes</string>
+    <string name="undo">Undo</string>
+    <string name="msg_note_deleted">Note deleted</string>
+    <string name="pin_note">Pin</string>
+    <string name="unpin_note">Unpin</string>
+    <string name="note_color">Note color</string>
+    <string name="view_grid">Grid view</string>
+    <string name="view_list">List view</string>
+</resources>

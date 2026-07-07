@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Android Auto Backup: veritabani Google hesabina otomatik yedeklenir -->
+<full-backup-content>
+    <include domain="database" path="notes.db" />
+    <include domain="database" path="notes.db-wal" />
+    <include domain="database" path="notes.db-shm" />
+</full-backup-content>
