@@ -1,69 +1,73 @@
-# NotesAssistant
+<div align="center">
+  <h1>NotesAssistant 📝</h1>
+  <p><strong>A Smart Notes & Checklist App for Android</strong><br><em>Android için Akıllı Not & Liste Uygulaması</em></p>
+  <br>
 
-*[English](#english) | [Türkçe](#türkçe)*
+  <img src="reddit_showcase.png" alt="NotesAssistant Showcase" width="100%">
+  <br><br>
+
+  [![Android](https://img.shields.io/badge/ANDROID-3DDC84?style=for-the-badge&logo=android&logoColor=white)](https://developer.android.com/)
+  [![Kotlin](https://img.shields.io/badge/KOTLIN-7F52FF?style=for-the-badge&logo=kotlin&logoColor=white)](https://kotlinlang.org/)
+  [![Jetpack Compose](https://img.shields.io/badge/JETPACK%20COMPOSE-4285F4?style=for-the-badge&logo=android&logoColor=white)](https://developer.android.com/jetpack/compose)
+  [![Room](https://img.shields.io/badge/ROOM-4285F4?style=for-the-badge&logo=android&logoColor=white)](https://developer.android.com/training/data-storage/room)
+  [![Google Drive API](https://img.shields.io/badge/GOOGLE%20DRIVE%20API-FFCA28?style=for-the-badge&logo=googledrive&logoColor=black)](https://developers.google.com/drive)<br>
+  [![License](https://img.shields.io/badge/LICENSE-MIT-4c1?style=for-the-badge)](LICENSE)
+  [![Version](https://img.shields.io/badge/VERSION-V1.0.0-007EC6?style=for-the-badge)](https://github.com/gokcank/NotesAssistant)
+</div>
 
 ---
 
-## English
+## 🇬🇧 English
 
-Smart notes assistant for Android. English (default) and Turkish language support,
-light/dark theme option, and AdMob banner ad integration.
+### Overview
+**NotesAssistant** is a modern Android notes and checklist app built with Jetpack Compose. It combines a distraction-free, borderless editor with smart date detection, biometric-locked private notes, and full cross-device sync through the user's own Google Drive account.
 
 ### Features
+* **Note Taking:** Title + free-text notes with a borderless, Google Keep–style editor.
+* **Simple Formatting:** Bold, italic, and headings via lightweight markup (`**bold**`, `*italic*`, `# heading`), with a formatted preview on cards.
+* **Checklist:** Checkable items with drag-to-reorder, auto-collecting completed items at the bottom, and one-tap clearing.
+* **Labels:** One category label per note (Work, Home, Shopping…) with filter chips on the home screen.
+* **Private Notes:** Biometric lock (fingerprint/face/screen lock); locked notes hide their content preview and are excluded from search.
+* **Trash:** Deleted notes are kept for 30 days before permanent removal, with restore at any time.
+* **Smart Date Detection:** Phrases like "tomorrow 3pm", "monday", or "in 3 days" are detected in note text and converted into a calendar event with one tap.
+* **Google Drive Sync:** Notes sync across devices via a private app-data folder in Drive, using a last-edit-wins merge strategy.
+* **Backup:** Automatic Android Auto Backup plus manual JSON export/import.
+* **Sharing & Shortcuts:** Share notes as text to other apps; long-press the app icon for quick "New note" / "New list".
+* **Theme Selection:** Light, Dark, or System.
 
-- **Note taking** — title + free-text notes; borderless Google Keep–style editor
-- **Simple formatting** — bold / italic / heading; lightweight markup (`**bold**`, `*italic*`, `# heading`), formatted preview on cards
-- **Checklist** — checkable items; drag to reorder, completed items collect at the bottom, clear with one tap
-- **Labels** — a single category label per note (Work, Home, Shopping…); filter chips on the home screen
-- **Private notes** — biometric lock (fingerprint/face/screen lock); content preview and search are disabled
-- **Trash** — deleted notes are kept for 30 days; restore or delete permanently
-- **Smart date detection** — phrases in note text like "tomorrow 3pm", "monday", "in 3 days", "08.12.2026 at 10" are detected automatically and turned into a calendar event with one tap (`smart/DateTimeExtractor.kt`)
-- **Add to calendar** — turns a note into a calendar event with one tap (via the system calendar app)
-- **Share** — send a note or list as text to other apps from the editor
-- **Import from document** — text-based documents (txt, md, …) become notes; text can also be sent in via "Share" from other apps
-- **App shortcuts** — long-press the app icon for "New note" / "New list"
-- **Cloud backup and sync**
-  - *Drive sync:* once a Google account is connected, notes sync across devices via a private app area in Drive ("last edit wins" per note; requires Drive API + an Android OAuth client in Google Cloud Console)
-  - *Automatic:* the database is backed up to the user's Google account via Android Auto Backup (restored on reinstall)
-  - *Manual:* JSON export/import (to any storage destination, including Google Drive)
+### Tech Stack
+* **Language:** Kotlin
+* **UI:** Jetpack Compose, Material 3
+* **Architecture:** MVVM, single module
+* **Local Storage:** Room (`notes`, `checklist_items`), DataStore Preferences
+* **Sync:** Google Drive API (app-data scope) via Play Services Identity/Authorization
+* **Security:** AndroidX Biometric for private-note authentication
+* **Serialization:** kotlinx.serialization
+* **Min SDK:** 26 · **Target SDK:** 36
 
-### Architecture
-
-- Kotlin + Jetpack Compose (Material 3), single module, MVVM
-- Room database (`notes`, `checklist_items` tables)
-- JSON backup via `kotlinx.serialization`
-- Min SDK 26 (Android 8.0), Target SDK 36
+### Privacy & Security
+All secrets (AdMob IDs, signing keystore passwords) are kept out of source control via `local.properties` and are never hardcoded. The project builds successfully even without these keys — it falls back to Google's test ad IDs and an unsigned release — so anyone can clone and build the app. Google Drive sync only ever requests the app-private `drive.appdata` scope; it never has access to the rest of the user's Drive.
 
 ### Build
-
 ```
 gradlew.bat assembleDebug
 ```
-
 APK output: `app/build/outputs/apk/debug/app-debug.apk`
 
 To install on a device: `adb install -r app/build/outputs/apk/debug/app-debug.apk`
 
-### Secrets and signing
-
-Sensitive values are never kept in source code; they're read from `local.properties` (not in git):
+### Secrets Table
 
 | Key | Description |
 |---|---|
 | `ADMOB_APP_ID` / `ADMOB_BANNER_ID` | AdMob IDs → manifest placeholder + `BuildConfig.ADMOB_BANNER_ID` |
 | `RELEASE_STORE_FILE`, `RELEASE_STORE_PASSWORD`, `RELEASE_KEY_ALIAS`, `RELEASE_KEY_PASSWORD` | Upload keystore path and passwords (`keystore/` folder is not in git) |
 
-If values aren't set, the build falls back to Google's test IDs and an unsigned release —
-so anyone who clones the repo can build it without the secret files.
-
-### Release (Google Play)
-
+### Release Checklist (Google Play)
 - [x] Real AdMob IDs wired via `local.properties`
 - [x] Upload keystore created (`keystore/notesassistant.jks`) and release signing configured
 - [x] R8 minification + resource shrinking enabled for release (`isMinifyEnabled`, `isShrinkResources`)
 - [x] AAB build: `gradlew bundleRelease` → `app/build/outputs/bundle/release/app-release.aab`
-
-Things you need to do in Play Console:
 - [ ] **Back up the keystore file and its password** (if lost, the app can no longer be updated!)
 - [ ] Create the app and upload the AAB to Internal testing / Production
 - [ ] Data safety form: the ad SDK collects data (AdMob "device identifiers"); a privacy policy URL is required
@@ -72,68 +76,65 @@ Things you need to do in Play Console:
 
 ---
 
-## Türkçe
+## 🇹🇷 Türkçe
 
-Android için akıllı not asistanı. İngilizce (varsayılan) ve Türkçe dil desteği,
-açık/koyu tema seçeneği ve AdMob banner reklam entegrasyonu içerir.
+### Genel Bakış
+**NotesAssistant**, Jetpack Compose ile geliştirilmiş modern bir Android not ve liste uygulamasıdır. Sade, çerçevesiz bir editörü; akıllı tarih algılamayı, biyometrik kilitli gizli notları ve kullanıcının kendi Google Drive hesabı üzerinden tam cihazlar arası eşitlemeyi bir araya getirir.
 
 ### Özellikler
+* **Not Alma:** Google Keep tarzı çerçevesiz editörle başlık + serbest metin notları.
+* **Basit Biçimlendirme:** Hafif işaretlemeyle kalın, italik ve başlık (`**kalın**`, `*italik*`, `# başlık`); kartlarda biçimli önizleme.
+* **Checklist:** Sürükleyerek sıralanabilen maddeler; tamamlananlar kendiliğinden altta toplanır, tek dokunuşla temizlenir.
+* **Etiketler:** Nota tek kategori etiketi (İş, Ev, Alışveriş…); ana ekranda çiplerle filtreleme.
+* **Gizli Notlar:** Biyometrik kilit (parmak izi/yüz/ekran kilidi); kilitli notların içerik önizlemesi gizlenir ve aramaya dahil edilmez.
+* **Çöp Kutusu:** Silinen notlar kalıcı silinmeden önce 30 gün bekletilir, istenildiği an geri alınabilir.
+* **Akıllı Tarih Algılama:** Not metnindeki "yarın 15:00", "pazartesi", "3 gün sonra" gibi ifadeler algılanır ve tek dokunuşla takvim etkinliğine dönüştürülür.
+* **Google Drive Eşitleme:** Notlar, Drive'ın uygulamaya özel gizli alanı üzerinden "en son düzenlenen kazanır" mantığıyla cihazlar arası eşitlenir.
+* **Yedekleme:** Otomatik Android Auto Backup ve manuel JSON dışa/içe aktarma.
+* **Paylaşma & Kısayollar:** Notları metin olarak başka uygulamalara paylaşma; simgeye uzun basarak hızlı "Yeni not" / "Yeni liste".
+* **Tema Seçimi:** Açık, Koyu veya Sistem.
 
-- **Not alma** — başlık + serbest metin notları; Google Keep tarzı çerçevesiz editör
-- **Basit biçimlendirme** — kalın / italik / başlık; hafif işaretleme (`**kalın**`, `*italik*`, `# başlık`), kartlarda biçimli önizleme
-- **Checklist** — işaretlenebilir maddeler; sürükleyerek sıralama, tamamlananlar altta toplanır, tek dokunuşla temizlenir
-- **Etiketler** — nota tek kategori etiketi (İş, Ev, Alışveriş…); ana ekranda çiplerle filtreleme
-- **Gizli notlar** — biyometrik kilit (parmak izi/yüz/ekran kilidi); içerik önizlemesi ve araması kapalı
-- **Çöp kutusu** — silinen notlar 30 gün bekletilir; geri alma ve kalıcı silme
-- **Akıllı tarih algılama** — not metnindeki "yarın 15:00", "pazartesi", "3 gün sonra", "12.08.2026 saat 10" gibi ifadeler otomatik algılanır ve tek dokunuşla takvim etkinliğine dönüştürülür (`smart/DateTimeExtractor.kt`)
-- **Takvime ekleme** — notu tek dokunuşla takvim etkinliğine dönüştürür (sistem takvim uygulaması üzerinden)
-- **Paylaşma** — not veya liste editörden metin olarak başka uygulamalara gönderilir
-- **Belgeden içe aktarma** — metin tabanlı belgeler (txt, md, …) nota dönüştürülür; ayrıca diğer uygulamalardan "Paylaş" ile metin gönderilebilir
-- **Simge kısayolları** — uygulama simgesine uzun basınca "Yeni not" / "Yeni liste"
-- **Google buluta yedekleme ve eşitleme**
-  - *Drive eşitleme:* Google hesabı bağlanınca notlar Drive'ın uygulamaya özel gizli alanında cihazlar arası eşitlenir (not bazında "en son düzenlenen kazanır"; Google Cloud Console'da Drive API + Android OAuth istemcisi gerektirir)
-  - *Otomatik:* Android Auto Backup ile veritabanı kullanıcının Google hesabına yedeklenir (uygulama yeniden kurulunca geri gelir)
-  - *Manuel:* JSON dışa/içe aktarma (Google Drive dahil herhangi bir depolama hedefine)
+### Kullanılan Teknolojiler
+* **Dil:** Kotlin
+* **Arayüz:** Jetpack Compose, Material 3
+* **Mimari:** Tek modül, MVVM
+* **Yerel Depolama:** Room (`notes`, `checklist_items`), DataStore Preferences
+* **Eşitleme:** Play Services Identity/Authorization üzerinden Google Drive API (app-data kapsamı)
+* **Güvenlik:** Gizli not doğrulaması için AndroidX Biometric
+* **Serileştirme:** kotlinx.serialization
+* **Min SDK:** 26 · **Target SDK:** 36
 
-### Mimari
-
-- Kotlin + Jetpack Compose (Material 3), tek modül, MVVM
-- Room veritabanı (`notes`, `checklist_items` tabloları)
-- `kotlinx.serialization` ile JSON yedekleme
-- Min SDK 26 (Android 8.0), Target SDK 36
+### Gizlilik & Güvenlik
+Tüm gizli değerler (AdMob kimlikleri, imza anahtarı parolaları) `local.properties` aracılığıyla kaynak kod dışında tutulur ve asla doğrudan koda yazılmaz. Proje bu anahtarlar olmadan da sorunsuz derlenir — Google'ın test reklam kimlikleriyle ve imzasız bir release'e düşer — böylece depoyu klonlayan herkes uygulamayı derleyebilir. Google Drive eşitlemesi yalnızca uygulamaya özel `drive.appdata` kapsamını ister; kullanıcının Drive'ının geri kalanına asla erişemez.
 
 ### Derleme
-
 ```
 gradlew.bat assembleDebug
 ```
-
 APK çıktısı: `app/build/outputs/apk/debug/app-debug.apk`
 
 Cihaza kurmak için: `adb install -r app/build/outputs/apk/debug/app-debug.apk`
 
-### Gizli değerler ve imzalama
-
-Hassas veriler kaynak kodda tutulmaz; `local.properties` (git dışı) üzerinden okunur:
+### Gizli Değerler Tablosu
 
 | Anahtar | Açıklama |
 |---|---|
 | `ADMOB_APP_ID` / `ADMOB_BANNER_ID` | AdMob kimlikleri → manifest placeholder + `BuildConfig.ADMOB_BANNER_ID` |
 | `RELEASE_STORE_FILE`, `RELEASE_STORE_PASSWORD`, `RELEASE_KEY_ALIAS`, `RELEASE_KEY_PASSWORD` | Upload keystore yolu ve parolaları (`keystore/` klasörü git dışıdır) |
 
-Değerler tanımlı değilse derleme Google test kimlikleriyle ve imzasız release ile devam eder;
-yani depoyu klonlayan herkes gizli dosya olmadan derleyebilir.
-
-### Yayın (Google Play)
-
+### Yayın Kontrol Listesi (Google Play)
 - [x] Gerçek AdMob kimlikleri `local.properties` üzerinden bağlandı
 - [x] Upload keystore oluşturuldu (`keystore/notesassistant.jks`) ve release imzalama kuruldu
 - [x] Release'te R8 küçültme + kaynak daraltma açık (`isMinifyEnabled`, `isShrinkResources`)
 - [x] AAB üretimi: `gradlew bundleRelease` → `app/build/outputs/bundle/release/app-release.aab`
-
-Play Console'da sizin yapmanız gerekenler:
 - [ ] **Keystore dosyasını ve parolasını yedekleyin** (kaybolursa uygulama güncellenemez!)
 - [ ] Uygulama oluşturup AAB'yi Internal testing / Production'a yükleyin
 - [ ] Veri güvenliği formu: reklam SDK'sı veri toplar (AdMob "cihaz tanımlayıcıları"); gizlilik politikası URL'si zorunlu
 - [ ] AdMob panelinde uygulamayı Play'deki paketle eşleştirin (yayın sonrası)
 - [ ] Mağaza girişi: simge, ekran görüntüleri, açıklama (EN + TR)
+
+---
+
+<div align="center">
+  <img src="logo.png" alt="NotesAssistant Logo" width="120">
+</div>
