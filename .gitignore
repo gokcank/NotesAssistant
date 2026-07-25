@@ -9,6 +9,10 @@ captures/
 .externalNativeBuild
 .cxx
 
+# AI asistan araç dizinleri — proje koduyla ilgisi yok
+.claude/
+.gemini/
+
 # Imza dosyalari ve gizli yapilandirmalar — asla versiyon kontrolune girmez
 keystore/
 *.jks
