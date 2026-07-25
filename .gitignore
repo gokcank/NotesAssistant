@@ -13,6 +13,9 @@ captures/
 .claude/
 .gemini/
 
+# Mağaza görselleri (ikon, ekran görüntüsü taslakları) — repo dışında tutulur
+store_assets/
+
 # Imza dosyalari ve gizli yapilandirmalar — asla versiyon kontrolune girmez
 keystore/
 *.jks
