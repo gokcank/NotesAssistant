@@ -48,32 +48,6 @@
 ### Privacy & Security
 All secrets (AdMob IDs, signing keystore passwords) are kept out of source control via `local.properties` and are never hardcoded. The project builds successfully even without these keys — it falls back to Google's test ad IDs and an unsigned release — so anyone can clone and build the app. Google Drive sync only ever requests the app-private `drive.appdata` scope; it never has access to the rest of the user's Drive.
 
-### Build
-```
-gradlew.bat assembleDebug
-```
-APK output: `app/build/outputs/apk/debug/app-debug.apk`
-
-To install on a device: `adb install -r app/build/outputs/apk/debug/app-debug.apk`
-
-### Secrets Table
-
-| Key | Description |
-|---|---|
-| `ADMOB_APP_ID` / `ADMOB_BANNER_ID` | AdMob IDs → manifest placeholder + `BuildConfig.ADMOB_BANNER_ID` |
-| `RELEASE_STORE_FILE`, `RELEASE_STORE_PASSWORD`, `RELEASE_KEY_ALIAS`, `RELEASE_KEY_PASSWORD` | Upload keystore path and passwords (`keystore/` folder is not in git) |
-
-### Release Checklist (Google Play)
-- [x] Real AdMob IDs wired via `local.properties`
-- [x] Upload keystore created (`keystore/notesassistant.jks`) and release signing configured
-- [x] R8 minification + resource shrinking enabled for release (`isMinifyEnabled`, `isShrinkResources`)
-- [x] AAB build: `gradlew bundleRelease` → `app/build/outputs/bundle/release/app-release.aab`
-- [ ] **Back up the keystore file and its password** (if lost, the app can no longer be updated!)
-- [ ] Create the app and upload the AAB to Internal testing / Production
-- [ ] Data safety form: the ad SDK collects data (AdMob "device identifiers"); a privacy policy URL is required
-- [ ] Match the app with its Play package in the AdMob console (after release)
-- [ ] Store listing: icon, screenshots, description (EN + TR)
-
 ---
 
 ## 🇹🇷 Türkçe
@@ -106,32 +80,6 @@ To install on a device: `adb install -r app/build/outputs/apk/debug/app-debug.ap
 
 ### Gizlilik & Güvenlik
 Tüm gizli değerler (AdMob kimlikleri, imza anahtarı parolaları) `local.properties` aracılığıyla kaynak kod dışında tutulur ve asla doğrudan koda yazılmaz. Proje bu anahtarlar olmadan da sorunsuz derlenir — Google'ın test reklam kimlikleriyle ve imzasız bir release'e düşer — böylece depoyu klonlayan herkes uygulamayı derleyebilir. Google Drive eşitlemesi yalnızca uygulamaya özel `drive.appdata` kapsamını ister; kullanıcının Drive'ının geri kalanına asla erişemez.
-
-### Derleme
-```
-gradlew.bat assembleDebug
-```
-APK çıktısı: `app/build/outputs/apk/debug/app-debug.apk`
-
-Cihaza kurmak için: `adb install -r app/build/outputs/apk/debug/app-debug.apk`
-
-### Gizli Değerler Tablosu
-
-| Anahtar | Açıklama |
-|---|---|
-| `ADMOB_APP_ID` / `ADMOB_BANNER_ID` | AdMob kimlikleri → manifest placeholder + `BuildConfig.ADMOB_BANNER_ID` |
-| `RELEASE_STORE_FILE`, `RELEASE_STORE_PASSWORD`, `RELEASE_KEY_ALIAS`, `RELEASE_KEY_PASSWORD` | Upload keystore yolu ve parolaları (`keystore/` klasörü git dışıdır) |
-
-### Yayın Kontrol Listesi (Google Play)
-- [x] Gerçek AdMob kimlikleri `local.properties` üzerinden bağlandı
-- [x] Upload keystore oluşturuldu (`keystore/notesassistant.jks`) ve release imzalama kuruldu
-- [x] Release'te R8 küçültme + kaynak daraltma açık (`isMinifyEnabled`, `isShrinkResources`)
-- [x] AAB üretimi: `gradlew bundleRelease` → `app/build/outputs/bundle/release/app-release.aab`
-- [ ] **Keystore dosyasını ve parolasını yedekleyin** (kaybolursa uygulama güncellenemez!)
-- [ ] Uygulama oluşturup AAB'yi Internal testing / Production'a yükleyin
-- [ ] Veri güvenliği formu: reklam SDK'sı veri toplar (AdMob "cihaz tanımlayıcıları"); gizlilik politikası URL'si zorunlu
-- [ ] AdMob panelinde uygulamayı Play'deki paketle eşleştirin (yayın sonrası)
-- [ ] Mağaza girişi: simge, ekran görüntüleri, açıklama (EN + TR)
 
 ---
 
