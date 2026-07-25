@@ -1,25 +1,30 @@
 # NotesAssistant
 
-Android için akıllı not / anımsatıcı asistanı. İngilizce (varsayılan) ve Türkçe dil desteği,
+Android için akıllı not asistanı. İngilizce (varsayılan) ve Türkçe dil desteği,
 açık/koyu tema seçeneği ve AdMob banner reklam entegrasyonu içerir.
 
 ## Özellikler
 
-- **Not alma** — başlık + serbest metin notları
-- **Checklist** — işaretlenebilir maddelerden oluşan listeler
-- **Akıllı tarih algılama** — not metnindeki "yarın 15:00", "pazartesi", "3 gün sonra", "12.08.2026 saat 10" gibi ifadeler otomatik algılanır ve tek dokunuşla hatırlatıcıya dönüştürülür (`smart/DateTimeExtractor.kt`)
-- **Hatırlatıcılar** — nottan veya checklist'ten tam zamanlı alarm + bildirim; cihaz yeniden başlatılınca alarmlar otomatik yeniden kurulur
+- **Not alma** — başlık + serbest metin notları; Google Keep tarzı çerçevesiz editör
+- **Basit biçimlendirme** — kalın / italik / başlık; hafif işaretleme (`**kalın**`, `*italik*`, `# başlık`), kartlarda biçimli önizleme
+- **Checklist** — işaretlenebilir maddeler; sürükleyerek sıralama, tamamlananlar altta toplanır, tek dokunuşla temizlenir
+- **Etiketler** — nota tek kategori etiketi (İş, Ev, Alışveriş…); ana ekranda çiplerle filtreleme
+- **Gizli notlar** — biyometrik kilit (parmak izi/yüz/ekran kilidi); içerik önizlemesi ve araması kapalı
+- **Çöp kutusu** — silinen notlar 30 gün bekletilir; geri alma ve kalıcı silme
+- **Akıllı tarih algılama** — not metnindeki "yarın 15:00", "pazartesi", "3 gün sonra", "12.08.2026 saat 10" gibi ifadeler otomatik algılanır ve tek dokunuşla takvim etkinliğine dönüştürülür (`smart/DateTimeExtractor.kt`)
 - **Takvime ekleme** — notu tek dokunuşla takvim etkinliğine dönüştürür (sistem takvim uygulaması üzerinden)
+- **Paylaşma** — not veya liste editörden metin olarak başka uygulamalara gönderilir
 - **Belgeden içe aktarma** — metin tabanlı belgeler (txt, md, …) nota dönüştürülür; ayrıca diğer uygulamalardan "Paylaş" ile metin gönderilebilir
-- **Google buluta yedekleme**
+- **Simge kısayolları** — uygulama simgesine uzun basınca "Yeni not" / "Yeni liste"
+- **Google buluta yedekleme ve eşitleme**
+  - *Drive eşitleme:* Google hesabı bağlanınca notlar Drive'ın uygulamaya özel gizli alanında cihazlar arası eşitlenir (not bazında "en son düzenlenen kazanır"; Google Cloud Console'da Drive API + Android OAuth istemcisi gerektirir)
   - *Otomatik:* Android Auto Backup ile veritabanı kullanıcının Google hesabına yedeklenir (uygulama yeniden kurulunca geri gelir)
   - *Manuel:* JSON dışa/içe aktarma (Google Drive dahil herhangi bir depolama hedefine)
 
 ## Mimari
 
 - Kotlin + Jetpack Compose (Material 3), tek modül, MVVM
-- Room veritabanı (`notes`, `checklist_items`, `reminders` tabloları)
-- `AlarmManager` + `BroadcastReceiver` ile hatırlatıcılar
+- Room veritabanı (`notes`, `checklist_items` tabloları)
 - `kotlinx.serialization` ile JSON yedekleme
 - Min SDK 26 (Android 8.0), Target SDK 36
 

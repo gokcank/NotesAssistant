@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="new_note"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_note"
+        android:shortcutShortLabel="@string/new_note"
+        android:shortcutLongLabel="@string/new_note">
+        <intent
+            android:action="com.gokcank.notesassistant.NEW_NOTE"
+            android:targetPackage="com.gokcank.notesassistant"
+            android:targetClass="com.gokcank.notesassistant.MainActivity" />
+    </shortcut>
+    <shortcut
+        android:shortcutId="new_checklist"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_checklist"
+        android:shortcutShortLabel="@string/new_checklist"
+        android:shortcutLongLabel="@string/new_checklist">
+        <intent
+            android:action="com.gokcank.notesassistant.NEW_CHECKLIST"
+            android:targetPackage="com.gokcank.notesassistant"
+            android:targetClass="com.gokcank.notesassistant.MainActivity" />
+    </shortcut>
+</shortcuts>

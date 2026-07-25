@@ -2,12 +2,8 @@ package com.gokcank.notesassistant.data
 
 import kotlinx.coroutines.flow.Flow
 
-class NotesRepository(
-    private val noteDao: NoteDao,
-    private val reminderDao: ReminderDao,
-) {
+class NotesRepository(private val noteDao: NoteDao) {
     fun observeNotes(): Flow<List<NoteWithItems>> = noteDao.observeNotes()
-    fun observeReminders(): Flow<List<Reminder>> = reminderDao.observeReminders()
 
     suspend fun getNote(id: Long): NoteWithItems? = noteDao.getNote(id)
 
@@ -31,25 +27,27 @@ class NotesRepository(
         return id
     }
 
-    suspend fun deleteNote(id: Long) = noteDao.deleteNote(id)
-
     suspend fun setPinned(id: Long, pinned: Boolean) = noteDao.setPinned(id, pinned)
 
-    suspend fun remindersForNote(noteId: Long): List<Reminder> = reminderDao.getForNote(noteId)
+    // --- Çöp kutusu ---
 
-    /** Silinen bir notu maddeleri ve hatırlatıcılarıyla, özgün kimlikleriyle geri getirir. */
-    suspend fun restoreNote(noteWithItems: NoteWithItems, reminders: List<Reminder>) {
-        noteDao.insertNote(noteWithItems.note)
-        if (noteWithItems.items.isNotEmpty()) noteDao.insertItems(noteWithItems.items)
-        reminders.forEach { reminderDao.insert(it) }
+    fun observeTrash(): Flow<List<NoteWithItems>> = noteDao.observeTrash()
+
+    suspend fun moveToTrash(id: Long) = noteDao.moveToTrash(id, System.currentTimeMillis())
+
+    suspend fun restoreFromTrash(id: Long) = noteDao.restoreFromTrash(id)
+
+    /** Notu kalıcı olarak siler (çöp ekranından). */
+    suspend fun deleteForever(id: Long) = noteDao.deleteNote(id)
+
+    suspend fun emptyTrash() = noteDao.emptyTrash()
+
+    /** Çöpte [TRASH_RETENTION_MS] süresinden uzun bekleyenleri kalıcı siler. */
+    suspend fun purgeOldTrash() =
+        noteDao.purgeTrash(System.currentTimeMillis() - TRASH_RETENTION_MS)
+
+    companion object {
+        /** Çöpte bekletme süresi: 30 gün */
+        const val TRASH_RETENTION_MS = 30L * 24 * 60 * 60 * 1000
     }
-
-    suspend fun addReminder(reminder: Reminder): Reminder {
-        val id = reminderDao.insert(reminder)
-        return reminder.copy(id = id)
-    }
-
-    suspend fun deleteReminder(id: Long) = reminderDao.delete(id)
-
-    suspend fun upcomingReminders(now: Long): List<Reminder> = reminderDao.getUpcoming(now)
 }

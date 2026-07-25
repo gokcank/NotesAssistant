@@ -3,9 +3,9 @@ package com.gokcank.notesassistant.data
 import android.content.Context
 import android.net.Uri
 import com.gokcank.notesassistant.R
-import com.gokcank.notesassistant.reminders.ReminderScheduler
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
+import java.util.UUID
 
 @Serializable
 data class BackupData(
@@ -13,7 +13,6 @@ data class BackupData(
     val exportedAt: Long,
     val notes: List<Note>,
     val items: List<ChecklistItem>,
-    val reminders: List<Reminder>,
 )
 
 /**
@@ -23,8 +22,8 @@ data class BackupData(
 class BackupManager(
     private val context: Context,
     private val database: AppDatabase,
-    private val scheduler: ReminderScheduler,
 ) {
+    // ignoreUnknownKeys: hatırlatıcı içeren eski yedek dosyaları da sorunsuz içe aktarılır
     private val json = Json { ignoreUnknownKeys = true; prettyPrint = true }
 
     suspend fun exportTo(uri: Uri) {
@@ -33,7 +32,6 @@ class BackupManager(
             exportedAt = System.currentTimeMillis(),
             notes = noteDao.getAllNotes(),
             items = noteDao.getAllItems(),
-            reminders = database.reminderDao().getUpcoming(0),
         )
         context.contentResolver.openOutputStream(uri, "wt")?.use { out ->
             out.write(json.encodeToString(BackupData.serializer(), data).toByteArray())
@@ -48,23 +46,19 @@ class BackupManager(
         val data = json.decodeFromString(BackupData.serializer(), text)
 
         val noteDao = database.noteDao()
-        val reminderDao = database.reminderDao()
         val idMap = mutableMapOf<Long, Long>()
         for (note in data.notes) {
-            val newId = noteDao.insertNote(note.copy(id = 0))
+            // Yeni eşitleme kimliği üretilir: aynı yedek iki kez yüklenirse
+            // kopyalar Drive eşitlemesinde birbirine karışmasın
+            val newId = noteDao.insertNote(
+                note.copy(id = 0, syncId = UUID.randomUUID().toString())
+            )
             idMap[note.id] = newId
         }
         val items = data.items.mapNotNull { item ->
             idMap[item.noteId]?.let { item.copy(id = 0, noteId = it) }
         }
         if (items.isNotEmpty()) noteDao.insertItems(items)
-
-        val now = System.currentTimeMillis()
-        data.reminders.filter { it.triggerAt > now }.forEach { reminder ->
-            val remapped = reminder.copy(id = 0, noteId = reminder.noteId?.let { idMap[it] })
-            val id = reminderDao.insert(remapped)
-            scheduler.schedule(remapped.copy(id = id))
-        }
         return data.notes.size
     }
 }

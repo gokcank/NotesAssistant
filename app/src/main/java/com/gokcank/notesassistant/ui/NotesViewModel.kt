@@ -10,7 +10,6 @@ import com.gokcank.notesassistant.R
 import com.gokcank.notesassistant.data.ChecklistItem
 import com.gokcank.notesassistant.data.Note
 import com.gokcank.notesassistant.data.NoteWithItems
-import com.gokcank.notesassistant.data.Reminder
 import com.gokcank.notesassistant.data.ThemeMode
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,14 +23,23 @@ class NotesViewModel(app: Application) : AndroidViewModel(app) {
 
     private val container = (app as NotesApp).container
     private val repository = container.repository
-    private val scheduler = container.scheduler
     private val backupManager = container.backupManager
     private val settingsStore = container.settingsStore
+    private val driveSync = container.driveSync
+
+    init {
+        viewModelScope.launch {
+            // Çöpte 30 günü dolan notlar açılışta sessizce temizlenir
+            repository.purgeOldTrash()
+            // Açılışta bir eşitleme turu (bağlı değilse sessizce atlanır)
+            driveSync.syncNow()
+        }
+    }
 
     val notes: StateFlow<List<NoteWithItems>> = repository.observeNotes()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
-    val reminders: StateFlow<List<Reminder>> = repository.observeReminders()
+    val trash: StateFlow<List<NoteWithItems>> = repository.observeTrash()
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(5_000), emptyList())
 
     val themeMode: StateFlow<ThemeMode> = settingsStore.themeMode
@@ -39,14 +47,6 @@ class NotesViewModel(app: Application) : AndroidViewModel(app) {
 
     fun setThemeMode(mode: ThemeMode) {
         viewModelScope.launch { settingsStore.setThemeMode(mode) }
-    }
-
-    /** İlk açılış tanıtımı gösterildi mi? Başlangıçta true: diyalog ancak gerçek değer false gelirse açılır. */
-    val onboardingDone: StateFlow<Boolean> = settingsStore.onboardingDone
-        .stateIn(viewModelScope, SharingStarted.Eagerly, true)
-
-    fun completeOnboarding() {
-        viewModelScope.launch { settingsStore.setOnboardingDone() }
     }
 
     val gridView: StateFlow<Boolean> = settingsStore.gridView
@@ -66,66 +66,112 @@ class NotesViewModel(app: Application) : AndroidViewModel(app) {
 
     suspend fun getNote(id: Long): NoteWithItems? = repository.getNote(id)
 
+    /** Not değişikliklerinden kısa süre sonra Drive'a sessiz eşitleme. */
+    private var pendingSync: kotlinx.coroutines.Job? = null
+    private fun scheduleSync() {
+        pendingSync?.cancel()
+        pendingSync = viewModelScope.launch {
+            kotlinx.coroutines.delay(4_000)
+            driveSync.syncNow()
+        }
+    }
+
     fun saveNote(note: Note, items: List<ChecklistItem>, onSaved: (Long) -> Unit = {}) {
         viewModelScope.launch {
             val id = repository.saveNote(note, items)
             onSaved(id)
+            scheduleSync()
         }
-    }
-
-    fun deleteNote(id: Long) {
-        viewModelScope.launch { repository.deleteNote(id) }
     }
 
     fun togglePin(note: Note) {
         viewModelScope.launch { repository.setPinned(note.id, !note.isPinned) }
     }
 
-    private data class DeletedBundle(val note: NoteWithItems, val reminders: List<Reminder>)
-
-    private var lastDeleted: DeletedBundle? = null
+    private var lastDeletedId: Long? = null
 
     /** "Geri Al" eylemli snackbar için tek seferlik mesaj. */
     private val _undoMessage = MutableStateFlow<String?>(null)
     val undoMessage: StateFlow<String?> = _undoMessage
     fun consumeUndoMessage() { _undoMessage.value = null }
 
-    /** Notu siler ama geri alınabilmesi için bellekte tutar. */
+    /** Notu çöp kutusuna taşır; "Geri Al" ile anında geri getirilebilir. */
     fun deleteNoteWithUndo(id: Long) {
         viewModelScope.launch {
-            val note = repository.getNote(id) ?: return@launch
-            val reminders = repository.remindersForNote(id)
-            reminders.forEach { scheduler.cancel(it.id) }
-            repository.deleteNote(id)
-            lastDeleted = DeletedBundle(note, reminders)
+            repository.moveToTrash(id)
+            lastDeletedId = id
             _undoMessage.value = getString(R.string.msg_note_deleted)
+            scheduleSync()
         }
     }
 
     fun undoDelete() {
-        val deleted = lastDeleted ?: return
-        lastDeleted = null
+        val id = lastDeletedId ?: return
+        lastDeletedId = null
         viewModelScope.launch {
-            repository.restoreNote(deleted.note, deleted.reminders)
-            val now = System.currentTimeMillis()
-            deleted.reminders.filter { it.triggerAt > now }.forEach { scheduler.schedule(it) }
+            repository.restoreFromTrash(id)
+            scheduleSync()
         }
     }
 
-    fun addReminder(noteId: Long?, title: String, message: String, triggerAt: Long) {
+    // --- Çöp kutusu ---
+
+    fun restoreFromTrash(id: Long) {
         viewModelScope.launch {
-            val saved = repository.addReminder(
-                Reminder(noteId = noteId, title = title, message = message, triggerAt = triggerAt)
-            )
-            scheduler.schedule(saved)
-            _message.value = getString(R.string.msg_reminder_set)
+            repository.restoreFromTrash(id)
+            scheduleSync()
         }
     }
 
-    fun deleteReminder(reminder: Reminder) {
+    fun deleteForever(id: Long) {
         viewModelScope.launch {
-            scheduler.cancel(reminder.id)
-            repository.deleteReminder(reminder.id)
+            repository.deleteForever(id)
+            scheduleSync()
+        }
+    }
+
+    fun emptyTrash() {
+        viewModelScope.launch {
+            repository.emptyTrash()
+            scheduleSync()
+        }
+    }
+
+    // --- Google Drive eşitleme ---
+
+    val driveSyncEnabled: StateFlow<Boolean> = settingsStore.driveSyncEnabled
+        .stateIn(viewModelScope, SharingStarted.Eagerly, false)
+
+    val lastSyncAt: StateFlow<Long> = settingsStore.lastSyncAt
+        .stateIn(viewModelScope, SharingStarted.Eagerly, 0L)
+
+    /** İlk bağlanma akışını başlatır; onay ekranı gerekiyorsa [onResolution] tetiklenir. */
+    fun beginDriveAuthorization(onResolution: (android.app.PendingIntent) -> Unit) {
+        driveSync.requestAuthorization(
+            onGranted = { completeDriveConnection() },
+            onResolution = onResolution,
+            onError = { _message.value = getString(R.string.msg_drive_connect_failed) },
+        )
+    }
+
+    /** İzin verildikten sonra çağrılır: eşitlemeyi açar ve ilk turu koşar. */
+    fun completeDriveConnection() {
+        viewModelScope.launch {
+            settingsStore.setDriveSyncEnabled(true)
+            syncNow()
+        }
+    }
+
+    fun disconnectDrive() {
+        viewModelScope.launch { settingsStore.setDriveSyncEnabled(false) }
+    }
+
+    /** Elle tetiklenen eşitleme; sonucu kullanıcıya bildirir. */
+    fun syncNow() {
+        viewModelScope.launch {
+            _message.value =
+                if (driveSync.syncNow()) getString(R.string.msg_sync_done)
+                else getString(R.string.msg_sync_failed)
         }
     }
 

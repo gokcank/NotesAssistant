@@ -2,25 +2,29 @@
 <resources>
     <string name="app_name">Notlar - NotesAssistant</string>
     <string name="notes_title">Notlarım</string>
-    <string name="reminders_title">Hatırlatıcılar</string>
     <string name="new_note">Yeni not</string>
     <string name="new_checklist">Yeni liste</string>
+    <string name="edit_note">Notu düzenle</string>
+    <string name="edit_checklist">Listeyi düzenle</string>
     <string name="note_title_hint">Başlık</string>
     <string name="note_body_hint">Notunuzu yazın…</string>
     <string name="checklist_item_hint">Madde ekle</string>
+    <string name="reorder">Taşı</string>
+    <string name="completed_section">Tamamlananlar (%1$d)</string>
+    <string name="clear_completed">Temizle</string>
+    <string name="clear_completed_title">İşaretlenen maddeler silinsin mi?</string>
+    <string name="clear_completed_message">Tamamlanan tüm maddeler listeden kaldırılacak.</string>
     <string name="save">Kaydet</string>
     <string name="delete">Sil</string>
-    <string name="set_reminder">Hatırlatıcı kur</string>
     <string name="add_to_calendar">Takvime ekle</string>
-    <string name="reminder_suggestion">Algılanan tarih: %1$s</string>
+    <string name="share">Paylaş</string>
+    <string name="format_bold">Kalın</string>
+    <string name="format_italic">İtalik</string>
+    <string name="format_heading">Başlık</string>
+    <string name="detected_date">Algılanan tarih: %1$s</string>
     <string name="empty_notes">Henüz not yok. Başlamak için + simgesine dokunun.</string>
-    <string name="empty_reminders">Kurulu hatırlatıcı yok.</string>
-    <string name="reminder_channel_name">Hatırlatıcılar</string>
-    <string name="reminder_channel_desc">Not ve liste hatırlatıcı bildirimleri</string>
     <string name="cancel">İptal</string>
-    <string name="ok">Tamam</string>
     <string name="untitled">(Başlıksız)</string>
-    <string name="past_suffix">(geçti)</string>
 
     <!-- Ayarlar -->
     <string name="settings_title">Ayarlar</string>
@@ -37,21 +41,26 @@
     <string name="settings_export_desc">Notlarınızı bir yedek dosyasına kaydedin</string>
     <string name="settings_import_title">Geri yükle</string>
     <string name="settings_import_desc">Notlarınızı yedek dosyasından geri getirin</string>
+    <string name="settings_drive_section">Google Drive eşitleme</string>
+    <string name="drive_connect_title">Google hesabını bağla</string>
+    <string name="drive_connect_desc">Notlarınız Drive\'daki uygulamaya özel gizli alanla cihazlar arası eşitlenir</string>
+    <string name="drive_sync_now">Şimdi eşitle</string>
+    <string name="drive_last_sync">Son eşitleme: %1$s</string>
+    <string name="drive_never_synced">Henüz eşitlenmedi</string>
+    <string name="drive_disconnect">Bağlantıyı kes</string>
+    <string name="drive_disconnect_desc">Eşitleme durur; notlar bu cihazda kalır</string>
+    <string name="msg_sync_done">Notlar eşitlendi</string>
+    <string name="msg_sync_failed">Eşitleme başarısız — bağlantınızı kontrol edin</string>
+    <string name="msg_drive_connect_failed">Google\'a bağlanılamadı</string>
     <string name="settings_notes_section">Notlar</string>
     <string name="settings_import_doc_title">Belgeden içe aktar</string>
     <string name="settings_import_doc_desc">Bir belgeyi yeni bir nota dönüştürün</string>
-    <string name="settings_notifications_section">Bildirimler</string>
-    <string name="settings_notification_title">Bildirim ayarları</string>
-    <string name="settings_notification_desc">Hatırlatıcı bildirimlerini yönetin</string>
-    <string name="settings_exact_alarm_title">Tam zamanında hatırlatma</string>
-    <string name="settings_exact_alarm_desc">Hatırlatıcıların dakikası dakikasına çalması için alarma izin verin</string>
     <string name="settings_about_section">Hakkında</string>
     <string name="settings_developer_title">Geliştirici</string>
     <string name="settings_bug_report">Hata Bildir</string>
     <string name="bug_report_subject">HATA BİLDİR</string>
 
     <!-- Mesajlar -->
-    <string name="msg_reminder_set">Hatırlatıcı kuruldu</string>
     <string name="msg_export_done">Yedek kaydedildi</string>
     <string name="msg_export_failed">Dışa aktarma başarısız: %1$s</string>
     <string name="msg_import_done">%1$d not geri yüklendi</string>
@@ -62,16 +71,25 @@
     <string name="error_file_read">Dosya okunamadı</string>
     <string name="imported_doc_title">İçe aktarılan belge</string>
 
-    <!-- İlk açılış -->
-    <string name="onboarding_title">Hatırlatıcıları kaçırmayın</string>
-    <string name="onboarding_message">NotesAssistant, notlarınızı ve listelerinizi seçtiğiniz saatte size bildirimle hatırlatır. Hatırlatıcıların size ulaşabilmesi için bildirimlere izin verin.</string>
-    <string name="onboarding_allow">İzin ver</string>
-    <string name="onboarding_later">Şimdi değil</string>
-    <string name="reminders_permission_warning">Bildirimler kapalı — hatırlatıcılar çalamaz. Düzeltmek için dokunun.</string>
+    <!-- Çöp kutusu -->
+    <string name="trash_title">Çöp kutusu</string>
+    <string name="settings_trash_desc">Silinen notları görün, geri alın</string>
+    <string name="trash_info">Notlar çöpte 30 gün bekler, sonra kalıcı olarak silinir.</string>
+    <string name="empty_trash_list">Çöp kutusu boş.</string>
+    <string name="empty_trash">Çöpü boşalt</string>
+    <string name="empty_trash_title">Çöp boşaltılsın mı?</string>
+    <string name="empty_trash_message">Çöpteki tüm notlar kalıcı olarak silinir.</string>
+    <string name="restore_note">Geri getir</string>
+    <string name="delete_forever">Kalıcı olarak sil</string>
+    <string name="delete_forever_title">Kalıcı olarak silinsin mi?</string>
+    <string name="delete_forever_message">Bu not bir daha geri getirilemez.</string>
+    <string name="deleted_on">Silinme: %1$s</string>
 
     <!-- Silme onayı -->
     <string name="delete_note_title">Not silinsin mi?</string>
-    <string name="delete_note_message">Not ve hatırlatıcıları kaldırılacak.</string>
+    <string name="delete_note_message">Not çöp kutusuna taşınacak.</string>
+    <string name="delete_empty_note_title">Boşalan not silinsin mi?</string>
+    <string name="delete_empty_note_message">Notun tüm içeriğini sildiniz. Not da silinsin mi?</string>
 
     <!-- Arama, sabitleme, renkler, görünüm -->
     <string name="search">Ara</string>
@@ -82,6 +100,20 @@
     <string name="pin_note">Sabitle</string>
     <string name="unpin_note">Sabitlemeyi kaldır</string>
     <string name="note_color">Not rengi</string>
+    <string name="label_title">Etiket</string>
+    <string name="add_label">Etiket ekle</string>
+    <string name="label_hint">Etiket adı</string>
+    <string name="existing_labels">Mevcut etiketler</string>
+    <string name="remove_label">Etiketi kaldır</string>
+    <string name="filter_all">Tümü</string>
+
+    <!-- Gizli notlar -->
+    <string name="lock_note">Gizli yap</string>
+    <string name="unlock_note">Kilidi kaldır</string>
+    <string name="locked_note">Gizli not</string>
+    <string name="auth_title">Kimliğinizi doğrulayın</string>
+    <string name="auth_subtitle">Devam etmek için parmak izi, yüz veya ekran kilidinizi kullanın.</string>
+    <string name="no_lockscreen_warning">Gizli notlar için önce cihaz ayarlarından bir ekran kilidi kurun.</string>
     <string name="view_grid">Izgara görünümü</string>
     <string name="view_list">Liste görünümü</string>
 </resources>

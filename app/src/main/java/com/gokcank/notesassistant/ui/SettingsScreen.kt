@@ -1,9 +1,10 @@
 package com.gokcank.notesassistant.ui
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Build
-import android.provider.Settings
 import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.clickable
@@ -20,14 +21,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Alarm
 import androidx.compose.material.icons.filled.BugReport
+import androidx.compose.material.icons.filled.CloudOff
+import androidx.compose.material.icons.filled.CloudSync
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Description
 import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material.icons.filled.FileUpload
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Language
-import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.outlined.Info
@@ -71,6 +73,7 @@ import com.gokcank.notesassistant.data.ThemeMode
 fun SettingsScreen(
     viewModel: NotesViewModel,
     onBack: () -> Unit,
+    onOpenTrash: () -> Unit,
 ) {
     val context = LocalContext.current
     val message by viewModel.message.collectAsState()
@@ -95,6 +98,14 @@ fun SettingsScreen(
     val themeMode by viewModel.themeMode.collectAsState()
     var showThemeDialog by remember { mutableStateOf(false) }
     var showLanguageDialog by remember { mutableStateOf(false) }
+
+    val driveEnabled by viewModel.driveSyncEnabled.collectAsState()
+    val lastSyncAt by viewModel.lastSyncAt.collectAsState()
+    val driveAuthLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartIntentSenderForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) viewModel.completeDriveConnection()
+    }
 
     val currentLanguageTag = AppCompatDelegate.getApplicationLocales().toLanguageTags()
     val currentLanguageLabel = when {
@@ -168,6 +179,41 @@ fun SettingsScreen(
                 }
             }
             item {
+                SettingsSection(stringResource(R.string.settings_drive_section)) {
+                    if (!driveEnabled) {
+                        SettingsItem(
+                            icon = Icons.Filled.CloudSync,
+                            title = stringResource(R.string.drive_connect_title),
+                            description = stringResource(R.string.drive_connect_desc),
+                            onClick = {
+                                viewModel.beginDriveAuthorization { pendingIntent ->
+                                    driveAuthLauncher.launch(
+                                        IntentSenderRequest.Builder(pendingIntent.intentSender).build()
+                                    )
+                                }
+                            },
+                        )
+                    } else {
+                        SettingsItem(
+                            icon = Icons.Filled.CloudSync,
+                            title = stringResource(R.string.drive_sync_now),
+                            description = if (lastSyncAt > 0) {
+                                stringResource(R.string.drive_last_sync, formatDateTime(lastSyncAt))
+                            } else {
+                                stringResource(R.string.drive_never_synced)
+                            },
+                            onClick = { viewModel.syncNow() },
+                        )
+                        SettingsItem(
+                            icon = Icons.Filled.CloudOff,
+                            title = stringResource(R.string.drive_disconnect),
+                            description = stringResource(R.string.drive_disconnect_desc),
+                            onClick = { viewModel.disconnectDrive() },
+                        )
+                    }
+                }
+            }
+            item {
                 SettingsSection(stringResource(R.string.settings_notes_section)) {
                     SettingsItem(
                         icon = Icons.Filled.Description,
@@ -175,38 +221,12 @@ fun SettingsScreen(
                         description = stringResource(R.string.settings_import_doc_desc),
                         onClick = { documentLauncher.launch(arrayOf("text/*")) },
                     )
-                }
-            }
-            item {
-                SettingsSection(stringResource(R.string.settings_notifications_section)) {
                     SettingsItem(
-                        icon = Icons.Filled.Notifications,
-                        title = stringResource(R.string.settings_notification_title),
-                        description = stringResource(R.string.settings_notification_desc),
-                        onClick = {
-                            runCatching {
-                                context.startActivity(
-                                    Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
-                                        .putExtra(Settings.EXTRA_APP_PACKAGE, context.packageName)
-                                )
-                            }
-                        },
+                        icon = Icons.Filled.Delete,
+                        title = stringResource(R.string.trash_title),
+                        description = stringResource(R.string.settings_trash_desc),
+                        onClick = onOpenTrash,
                     )
-                    if (Build.VERSION.SDK_INT >= 31) {
-                        SettingsItem(
-                            icon = Icons.Filled.Alarm,
-                            title = stringResource(R.string.settings_exact_alarm_title),
-                            description = stringResource(R.string.settings_exact_alarm_desc),
-                            onClick = {
-                                runCatching {
-                                    context.startActivity(
-                                        Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM)
-                                            .setData("package:${context.packageName}".toUri())
-                                    )
-                                }
-                            },
-                        )
-                    }
                 }
             }
             item {

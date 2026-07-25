@@ -20,9 +20,8 @@ import com.gokcank.notesassistant.data.ThemeMode
 import com.gokcank.notesassistant.ui.EditorScreen
 import com.gokcank.notesassistant.ui.NotesListScreen
 import com.gokcank.notesassistant.ui.NotesViewModel
-import com.gokcank.notesassistant.ui.OnboardingDialog
-import com.gokcank.notesassistant.ui.RemindersScreen
 import com.gokcank.notesassistant.ui.SettingsScreen
+import com.gokcank.notesassistant.ui.TrashScreen
 import com.gokcank.notesassistant.ui.theme.NotesAssistantTheme
 
 class MainActivity : AppCompatActivity() {
@@ -34,7 +33,12 @@ class MainActivity : AppCompatActivity() {
         val sharedText =
             if (intent?.action == Intent.ACTION_SEND) intent.getStringExtra(Intent.EXTRA_TEXT) else null
         val sharedTitle = intent?.getStringExtra(Intent.EXTRA_SUBJECT).orEmpty()
-        val openNoteId = intent?.getLongExtra(EXTRA_OPEN_NOTE_ID, -1L) ?: -1L
+        // Simge kısayolundan gelindiyse doğrudan boş editör açılır
+        val shortcutChecklist = when (intent?.action) {
+            ACTION_NEW_NOTE -> false
+            ACTION_NEW_CHECKLIST -> true
+            else -> null
+        }
 
         setContent {
             val viewModel: NotesViewModel = viewModel()
@@ -45,13 +49,14 @@ class MainActivity : AppCompatActivity() {
                 ThemeMode.SYSTEM -> isSystemInDarkTheme()
             }
             NotesAssistantTheme(darkTheme = darkTheme) {
-                AppNav(viewModel, sharedTitle, sharedText, openNoteId)
+                AppNav(viewModel, sharedTitle, sharedText, shortcutChecklist)
             }
         }
     }
 
     companion object {
-        const val EXTRA_OPEN_NOTE_ID = "open_note_id"
+        const val ACTION_NEW_NOTE = "com.gokcank.notesassistant.NEW_NOTE"
+        const val ACTION_NEW_CHECKLIST = "com.gokcank.notesassistant.NEW_CHECKLIST"
     }
 }
 
@@ -60,18 +65,13 @@ fun AppNav(
     viewModel: NotesViewModel,
     sharedTitle: String,
     sharedText: String?,
-    openNoteId: Long,
+    shortcutChecklist: Boolean? = null,
 ) {
     val navController = rememberNavController()
 
-    val onboardingDone by viewModel.onboardingDone.collectAsState()
-    if (!onboardingDone) {
-        OnboardingDialog(onFinished = { viewModel.completeOnboarding() })
-    }
-
     LaunchedEffect(Unit) {
-        if (openNoteId > 0) {
-            navController.navigate("editor/$openNoteId?checklist=false")
+        if (shortcutChecklist != null) {
+            navController.navigate("editor/-1?checklist=$shortcutChecklist")
         } else if (!sharedText.isNullOrBlank()) {
             viewModel.createNoteFromText(sharedTitle, sharedText) { id ->
                 navController.navigate("editor/$id?checklist=false")
@@ -85,12 +85,18 @@ fun AppNav(
                 viewModel = viewModel,
                 onOpenNote = { navController.navigate("editor/$it?checklist=false") },
                 onNewNote = { checklist -> navController.navigate("editor/-1?checklist=$checklist") },
-                onOpenReminders = { navController.navigate("reminders") },
                 onOpenSettings = { navController.navigate("settings") },
             )
         }
         composable("settings") {
             SettingsScreen(
+                viewModel = viewModel,
+                onBack = { navController.popBackStack() },
+                onOpenTrash = { navController.navigate("trash") },
+            )
+        }
+        composable("trash") {
+            TrashScreen(
                 viewModel = viewModel,
                 onBack = { navController.popBackStack() },
             )
@@ -107,13 +113,6 @@ fun AppNav(
                 noteId = entry.arguments?.getLong("noteId") ?: -1L,
                 checklistDefault = entry.arguments?.getBoolean("checklist") ?: false,
                 onBack = { navController.popBackStack() },
-            )
-        }
-        composable("reminders") {
-            RemindersScreen(
-                viewModel = viewModel,
-                onBack = { navController.popBackStack() },
-                onOpenNote = { navController.navigate("editor/$it?checklist=false") },
             )
         }
     }

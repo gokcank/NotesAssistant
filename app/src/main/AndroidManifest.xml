@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
-    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- Reklamlar ve Google Drive eşitlemesi için -->
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name=".NotesApp"
@@ -46,20 +45,11 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="text/plain" />
             </intent-filter>
+            <!-- Simgeye uzun basınca çıkan kısayollar -->
+            <meta-data
+                android:name="android.app.shortcuts"
+                android:resource="@xml/shortcuts" />
         </activity>
-
-        <receiver
-            android:name=".reminders.ReminderReceiver"
-            android:exported="false" />
-
-        <receiver
-            android:name=".reminders.BootReceiver"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
-            </intent-filter>
-        </receiver>
     </application>
 
 </manifest>
