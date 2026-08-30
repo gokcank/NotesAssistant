@@ -63,7 +63,10 @@
     <!-- Mesajlar -->
     <string name="msg_export_done">Yedek kaydedildi</string>
     <string name="msg_export_failed">Dışa aktarma başarısız: %1$s</string>
-    <string name="msg_import_done">%1$d not geri yüklendi</string>
+    <plurals name="msg_import_done">
+        <item quantity="one">%1$d not geri yüklendi</item>
+        <item quantity="other">%1$d not geri yüklendi</item>
+    </plurals>
     <string name="msg_import_failed">Geri yükleme başarısız: %1$s</string>
     <string name="msg_doc_imported">Belge nota dönüştürüldü</string>
     <string name="msg_doc_import_failed">Belge içe aktarılamadı: %1$s</string>

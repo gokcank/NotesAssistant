@@ -2,6 +2,7 @@ package com.gokcank.notesassistant.ui
 
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -104,6 +105,7 @@ fun EditorScreen(
     onBack: () -> Unit,
 ) {
     val context = LocalContext.current
+    val activity = LocalActivity.current as? FragmentActivity
     var baseNote by remember { mutableStateOf(Note(isChecklist = checklistDefault)) }
     var title by remember { mutableStateOf("") }
     var body by remember { mutableStateOf(TextFieldValue("")) }
@@ -264,9 +266,9 @@ fun EditorScreen(
                 actions = {
                     IconButton(onClick = {
                         if (baseNote.isLocked) {
-                            (context as? FragmentActivity)?.let { activity ->
+                            activity?.let { act ->
                                 BiometricLock.authenticate(
-                                    activity,
+                                    act,
                                     title = context.getString(R.string.auth_title),
                                     subtitle = context.getString(R.string.auth_subtitle),
                                 ) { baseNote = baseNote.copy(isLocked = false) }

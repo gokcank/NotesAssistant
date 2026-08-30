@@ -68,7 +68,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
+import androidx.activity.compose.LocalActivity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.fragment.app.FragmentActivity
@@ -138,7 +138,7 @@ fun NotesListScreen(
     }
 
     // Kilitli not açılmadan önce kimlik doğrulaması istenir
-    val activity = LocalContext.current as? FragmentActivity
+    val activity = LocalActivity.current as? FragmentActivity
     val authTitle = stringResource(R.string.auth_title)
     val authSubtitle = stringResource(R.string.auth_subtitle)
     fun openNote(noteWithItems: NoteWithItems) {

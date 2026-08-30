@@ -68,7 +68,10 @@
     <!-- Messages -->
     <string name="msg_export_done">Backup saved</string>
     <string name="msg_export_failed">Export failed: %1$s</string>
-    <string name="msg_import_done">%1$d notes restored</string>
+    <plurals name="msg_import_done">
+        <item quantity="one">%1$d note restored</item>
+        <item quantity="other">%1$d notes restored</item>
+    </plurals>
     <string name="msg_import_failed">Restore failed: %1$s</string>
     <string name="msg_doc_imported">Document converted to a note</string>
     <string name="msg_doc_import_failed">Couldn\'t import the document: %1$s</string>

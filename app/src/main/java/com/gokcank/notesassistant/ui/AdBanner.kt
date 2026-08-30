@@ -5,8 +5,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalWindowInfo
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -24,7 +25,11 @@ import com.google.android.gms.ads.AdView
 @Composable
 fun AdBanner(modifier: Modifier = Modifier) {
     val context = LocalContext.current
-    val screenWidthDp = LocalConfiguration.current.screenWidthDp
+    val windowInfo = LocalWindowInfo.current
+    val density = LocalDensity.current
+    val screenWidthDp = remember(windowInfo.containerSize, density) {
+        with(density) { windowInfo.containerSize.width.toDp().value.toInt() }
+    }
     val adView = remember(screenWidthDp) {
         AdView(context).apply {
             setAdSize(

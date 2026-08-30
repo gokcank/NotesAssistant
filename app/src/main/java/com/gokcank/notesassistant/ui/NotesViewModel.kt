@@ -64,6 +64,9 @@ class NotesViewModel(app: Application) : AndroidViewModel(app) {
     private fun getString(resId: Int, vararg args: Any): String =
         getApplication<Application>().getString(resId, *args)
 
+    private fun getQuantityString(resId: Int, quantity: Int, vararg args: Any): String =
+        getApplication<Application>().resources.getQuantityString(resId, quantity, *args)
+
     suspend fun getNote(id: Long): NoteWithItems? = repository.getNote(id)
 
     /** Not değişikliklerinden kısa süre sonra Drive'a sessiz eşitleme. */
@@ -190,7 +193,7 @@ class NotesViewModel(app: Application) : AndroidViewModel(app) {
     fun importBackup(uri: Uri) {
         viewModelScope.launch {
             runCatching { withContext(Dispatchers.IO) { backupManager.importFrom(uri) } }
-                .onSuccess { _message.value = getString(R.string.msg_import_done, it) }
+                .onSuccess { _message.value = getQuantityString(R.plurals.msg_import_done, it, it) }
                 .onFailure { _message.value = getString(R.string.msg_import_failed, it.message.orEmpty()) }
         }
     }
